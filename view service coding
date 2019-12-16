@@ -1,0 +1,30 @@
+app.get('/customerdata',(req,res)=>{
+var MongoClient = mongodb.MongoClient;
+var url = "mongodb://localhost:27017/";
+
+MongoClient.connect(url, function(err, db)
+{
+if (err) throw err;
+var dbo = db.db("Haste_Pickup_Service");
+dbo.collection('customer').find({}).toArray(function(err, result)
+{
+if (err) throw err;
+// write HTML output
+          var output = '<html><header><title>Display Collection</title></header><body>';
+          output += '<table border="1"><tr><td><b>' + 'Username' + '</b></td><td><b>' + 'FirstName' + '</b></td><td><b>'
+ + 'LastName' + '</b></td><td><b>' + 'Registration_ID' + '</b></td></tr>'+'</b></td><td><b>' + 'Address' + '</b></td></tr>';
+ 
+            result.forEach(function(results){
+            output += '<tr><td>' + results.customer_username + '</td><td>' + results.firstName +  '</td><td>' + results.lastname
++'</td><td>' + results.registration_id +'</td></tr>'+'</td><td>' + results.address +'</td></tr>';
+          });
+
+          // write HTML output (ending)
+          output += '</table></body></html>'
+
+          // send output back
+ res.send(output);
+db.close();
+});
+});
+});
